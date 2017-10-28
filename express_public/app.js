@@ -27,6 +27,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/views', express.static(path.join(__dirname, 'views')));
+
+app.use('*', function(req, res, next){
+  if(req.get('x-accept-renderable')) {
+    res.render = (view, locals, callback) => {
+      return res.json({
+        view: view,
+        data: locals
+      });
+    }
+  }
+
+  next();
+})
 
 app.use('/', index);
 
