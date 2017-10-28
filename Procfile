@@ -1,1 +1,1 @@
-web: node bin/www
+web: node express_public/bin/www

@@ -20,7 +20,6 @@ $(function(){
               $('div#content-wrapper').empty().append(rendered);
           }
         })
-        console.log(data);
       }
     })
   });
