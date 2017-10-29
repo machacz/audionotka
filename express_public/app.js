@@ -4,16 +4,19 @@ const express = require('express'),
   logger = require('morgan'),
   cookieParser = require('cookie-parser'),
   bodyParser = require('body-parser'),
-  session = require('express-session');
+  session = require('express-session'),
+  passport = require('passport')
+const env = require('env2')('./config.env');
 
 var app = express();
 var index = require('./routes/index');
 var oauth = {
-  google: require('/.routes/oauth/google')
+  google: require('./routes/oauth/google')
 };
+var account = require('./routes/account');
 
 app.use(session({
-  secret: 'we are your secret, my friend',
+  secret: process.env.SESSION_SECRET || 'we are your secret, my friend',
   resave: false,
   saveUninitialized: true,
   cookie: { secure: true }
@@ -29,9 +32,18 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+app.use( passport.initialize());
+app.use( passport.session());
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/views', express.static(path.join(__dirname, 'views')));
 
+/**
+ * We expose templates for the web browser. When browser adds specific header,
+ * we don't render template, and instead we send template path and data.
+ * Browser will render it on its own.
+ */
 app.use('*', function(req, res, next){
   if(req.get('x-accept-renderable')) {
     res.render = (view, locals, callback) => {
@@ -41,12 +53,11 @@ app.use('*', function(req, res, next){
       });
     }
   }
-
   next();
 })
 
 app.use('/oauth/google', oauth.google);
-
+app.use('/account', account);
 app.use('/', index);
 
 // catch 404 and forward to error handler
