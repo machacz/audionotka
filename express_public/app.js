@@ -8,6 +8,9 @@ const express = require('express'),
 
 var app = express();
 var index = require('./routes/index');
+var oauth = {
+  google: require('/.routes/oauth/google')
+};
 
 app.use(session({
   secret: 'we are your secret, my friend',
@@ -41,6 +44,8 @@ app.use('*', function(req, res, next){
 
   next();
 })
+
+app.use('/oauth/google', oauth.google);
 
 app.use('/', index);
 
