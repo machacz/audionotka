@@ -1,5 +1,25 @@
 $(function(){
-  $('body').on('click', 'div.mainmenu a', function(e) {
+  var templates = {};
+
+  var loadPage = function(data) {
+    $('#content-wrapper').css({opacity: 0});
+    return $.ajax({
+      url: '/views/' + data.view + '.hbs',
+      type: 'GET',
+      success: (templateBody) => {
+          template = Handlebars.compile(templateBody);
+          rendered = template(data);
+          $('#content-wrapper').empty().append(rendered);
+          $('#content-wrapper').animate({opacity: 1}, 100);
+      }
+    })
+  };
+
+  window.onpopstate = function(event) {
+    loadPage(event.state);
+  }
+
+  $('body').on('click', '.mainmenu a', function(e) {
     e.preventDefault();
 
     var url = $(this).attr('href');
@@ -11,16 +31,12 @@ $(function(){
         "X-Accept-Renderable" : "yes"
       },
       success: function(data) {
-        $.ajax({
-          url: '/views/' + data.view + '.hbs',
-          type: 'GET',
-          success: (templateBody) => {
-              template = Handlebars.compile(templateBody);
-              rendered = template(data);
-              $('div#content-wrapper').empty().append(rendered);
-          }
-        })
+        loadPage(data)
+        .done(function(){
+          window.history.pushState(data, document.title, url);
+        });
       }
     })
   });
+
 });

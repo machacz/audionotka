@@ -13,7 +13,7 @@ var index = require('./routes/index');
 var oauth = {
   google: require('./routes/oauth/google')
 };
-var account = require('./routes/account');
+var notes = require('./routes/notes');
 
 app.use(session({
   secret: process.env.SESSION_SECRET || 'we are your secret, my friend',
@@ -57,8 +57,8 @@ app.use('*', function(req, res, next){
 })
 
 app.use('/oauth/google', oauth.google);
-app.use('/account', account);
 app.use('/', index);
+app.use('/notes', notes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
