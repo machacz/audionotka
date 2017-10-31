@@ -19,7 +19,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'we are your secret, my friend',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: true }
+  //cookie: { secure: true } //how to configure it to start working properly?
 }))
 
 // view engine setup
