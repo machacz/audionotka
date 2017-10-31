@@ -8,7 +8,7 @@ $(function(){
       type: 'GET',
       success: (templateBody) => {
           template = Handlebars.compile(templateBody);
-          rendered = template(data);
+          rendered = template(data.data);
           $('#content-wrapper').empty().append(rendered);
           $('#content-wrapper').animate({opacity: 1}, 100);
       }
