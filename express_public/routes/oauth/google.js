@@ -5,7 +5,6 @@ var passport = require('passport')
 var GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
 
 passport.serializeUser(function(user, done) {
-  console.log(user)
   done(null, user);
 });
 
@@ -13,10 +12,12 @@ passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
 
+var callbackHost = process.env.GOOGLE_CALLBACK_HOST || '';
+
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: '/oauth/google',
+    callbackURL: callbackHost + '/oauth/google',
     passReqToCallback: true
   },
   function(request, accessToken, refreshToken, profile, done) {
@@ -27,7 +28,6 @@ passport.use(new GoogleStrategy({
          // represent the logged-in user.  In a typical application, you would want
          // to associate the Google account with a user record in your database,
          // and return that user instead.
-         console.log(profile)
          return done(null, profile);
        });
   }

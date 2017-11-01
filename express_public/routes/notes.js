@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 
 function loggedInOnly(req, res, next) {
-  console.log(req.user)
     if (req.isAuthenticated()) {
         next();
     } else {
