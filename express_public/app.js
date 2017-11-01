@@ -39,7 +39,7 @@ app.use( passport.session());
 
 app.use('*', (req, res, next) => {
   if(forceSSL && req.headers['x-forwarded-proto']!=='https'){
-    return res.redirect(301, 'https://' + HEROKU_APP_NAME + '.herokuapp.com' + req.url);
+    return res.redirect(301, 'https://' + process.env.HEROKU_APP_NAME + '.herokuapp.com' + req.url);
   }
   next();
 });
