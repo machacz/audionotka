@@ -8,6 +8,7 @@ const express = require('express'),
   passport = require('passport')
 const env = require('env2')('./config.env');
 var forceSSL = process.env.HEROKU_FORCE_SSL == true;
+var redirectHost =  process.env.GOOGLE_CALLBACK_HOST || '';
 
 var app = express();
 var index = require('./routes/index');
@@ -39,7 +40,7 @@ app.use( passport.session());
 
 app.use('*', (req, res, next) => {
   if(forceSSL && req.headers['x-forwarded-proto']!=='https'){
-    return res.redirect(301, 'https://' + process.env.HEROKU_APP_NAME + '.herokuapp.com' + req.url);
+    return res.redirect(301, 'https://' + redirectHost + '.herokuapp.com' + req.url);
   }
   next();
 });
