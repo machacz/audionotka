@@ -39,7 +39,7 @@ app.use( passport.session());
 
 app.use('*', (req, res, next) => {
   if(forceSSL && req.headers['x-forwarded-proto']!=='https'){
-    return res.redirect(301, 'https://apps.iazi.ch'+req.url);
+    return res.redirect(301, 'https://audonotka.herokuapp.com'+req.url);
   }
   next();
 });
