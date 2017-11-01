@@ -7,6 +7,7 @@ const express = require('express'),
   session = require('express-session'),
   passport = require('passport')
 const env = require('env2')('./config.env');
+var forceSSL = process.env.HEROKU_FORCE_SSL == true;
 
 var app = express();
 var index = require('./routes/index');
@@ -35,6 +36,13 @@ app.use(cookieParser());
 
 app.use( passport.initialize());
 app.use( passport.session());
+
+app.use('*', (req, res, next) => {
+  if(forceSSL && req.headers['x-forwarded-proto']!=='https'){
+    return res.redirect(301, 'https://apps.iazi.ch'+req.url);
+  }
+  next();
+});
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/views', express.static(path.join(__dirname, 'views')));
